@@ -8,7 +8,7 @@
 <style>
   :root { --ink: #1a1a1a; --paper: #f9f7f4; --accent: #b08e61; --soft: #e5e0d8; --muted: #7a736a; --white: #ffffff; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; font-weight: 300; }
 
   /* 導覽列 */
   nav { position: fixed; top: 0; width: 100%; z-index: 100; display: flex; justify-content: space-between; padding: 1.2rem 5%; background: rgba(249, 247, 244, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--soft); }
@@ -31,27 +31,23 @@
   .p-name { font-size: 0.9rem; margin-bottom: 8px; }
   .p-price { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-weight: 500; }
 
-  /* 側欄與彈窗共用 */
+  /* 彈窗樣式 */
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: 0.4s; z-index: 200; }
   .overlay.show { opacity: 1; pointer-events: all; }
   .drawer { position: fixed; background: white; z-index: 201; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px; display: flex; flex-direction: column; }
-  
-  /* 購物車側欄 */
   #cartDrawer { top: 0; right: 0; bottom: 0; width: 400px; transform: translateX(100%); }
   #cartDrawer.show { transform: translateX(0); }
-  
-  /* 規格選擇與結帳彈窗 */
   .modal { top: 50%; left: 50%; width: 450px; max-width: 90vw; transform: translate(-50%, 100%); border-radius: 12px; max-height: 85vh; overflow-y: auto; display: none; }
   .modal.show { display: block; transform: translate(-50%, -50%); }
 
-  /* 藥丸型規格按鈕 (依據你的截圖) */
+  /* 藥丸型按鈕 (依據截圖 2026-05-14) */
   .variant-group { margin-bottom: 25px; }
   .variant-title { font-size: 0.9rem; margin-bottom: 12px; display: block; font-weight: 500; }
   .chip-container { display: flex; flex-wrap: wrap; gap: 10px; }
-  .chip { padding: 8px 20px; border: 1px solid var(--soft); border-radius: 25px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+  .chip { padding: 8px 20px; border: 1px solid var(--soft); border-radius: 25px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; background: white; }
   .chip.selected { background: #eeeeee; border-color: var(--ink); font-weight: 500; }
 
-  /* 表單與按鈕 */
+  /* 表單與結帳 */
   .form-item { margin-bottom: 15px; }
   .form-item label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 5px; }
   .form-input { width: 100%; padding: 12px; border: 1px solid var(--soft); outline: none; }
@@ -59,7 +55,6 @@
 
   .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
   .cart-img { width: 60px; height: 60px; object-fit: cover; }
-  
   #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; padding: 12px 30px; border-radius: 4px; font-size: 0.8rem; display: none; z-index: 1000; }
 </style>
 </head>
@@ -74,12 +69,13 @@
 
 <div class="container">
   <div class="products-grid" id="productGrid">
-    <p style="text-align: center; grid-column: 1/-1;">Loading curated items...</p>
+    <p style="text-align: center; grid-column: 1/-1;">正在載入精選選物...</p>
   </div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
+<!-- 規格彈窗 -->
 <div id="variantModal" class="drawer modal">
   <h2 id="modalTitle" style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Select Options</h2>
   <div id="variantSelectors"></div>
@@ -94,6 +90,7 @@
   <button class="main-btn" onclick="confirmAdd()">ADD TO BAG</button>
 </div>
 
+<!-- 購物車 -->
 <div id="cartDrawer" class="drawer">
   <h2 style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Your Bag</h2>
   <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
@@ -105,6 +102,7 @@
   </div>
 </div>
 
+<!-- 結帳表單 -->
 <div id="checkoutModal" class="drawer modal">
   <h2 style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Shipping Detail</h2>
   <div class="form-item"><label>收件姓名</label><input type="text" id="cName" class="form-input"></div>
@@ -112,21 +110,24 @@
   <div class="form-item"><label>電子信箱</label><input type="email" id="cEmail" class="form-input"></div>
   <div class="form-item"><label>7-11 門市</label><input type="text" id="cStore" class="form-input"></div>
   <div class="form-item"><label>匯款末五碼</label><input type="text" id="cBank" class="form-input"></div>
-  <div id="checkoutSummary" style="font-size: 0.8rem; background: #f0f0f0; padding: 15px; margin-top: 10px;"></div>
+  <div id="checkoutSummary" style="font-size: 0.8rem; background: #f0f0f0; padding: 15px; margin-top: 10px; line-height: 1.6;"></div>
   <button class="main-btn" onclick="sendToGoogle()">CONFIRM & SEND</button>
 </div>
 
 <div id="toast"></div>
 
 <script>
-  // 1. 設定與讀取
-  const SHEET_URL = "https://docs.google.com/spreadsheets/d/1RoHZvsY9-Ly94HWj6zyxTPwEnmYkKv-GXKNpqrWu4fxgkh3nrpjFA6TmFI6cuaZQX-BhvMwniFjkFq/gviz/tq?tqx=out:json";
+  // 更新後的試算表 ID
+  const SHEET_ID = "1w0TnBgPXoN7geL4XjPpAW5D2Flok6kwXxfUzr72gSBc";
+  const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
   let PRODUCTS = [];
   let cart = [];
   let currentProduct = null;
   let currentModalQty = 1;
   let selectedVariants = {};
 
+  // 載入商品資料
   async function fetchProducts() {
     try {
       const resp = await fetch(SHEET_URL);
@@ -140,7 +141,9 @@
         variants: r.c[4]?.v || ""
       }));
       renderProducts();
-    } catch (e) { console.error("抓取失敗", e); }
+    } catch (e) { 
+      console.error("抓取失敗，請確認試算表權限已開啟為「任何人皆可檢視」", e); 
+    }
   }
 
   function renderProducts() {
@@ -159,7 +162,6 @@
     `).join('');
   }
 
-  // 2. 加入購物車邏輯
   function handleAddToCart(id) {
     currentProduct = PRODUCTS.find(p => p.id === id);
     currentModalQty = 1;
@@ -178,7 +180,6 @@
     document.getElementById('modalTitle').innerText = currentProduct.name;
     document.getElementById('modalQty').innerText = 1;
 
-    // 解析 "顏色:灰,白|尺寸:M,L"
     const groups = currentProduct.variants.split('|');
     groups.forEach(g => {
       const [label, optsStr] = g.split(':');
@@ -258,7 +259,7 @@
     if(!cart.length) return;
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const summary = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
-    document.getElementById('checkoutSummary').innerText = `訂單概要：${summary}\n應付總額：NT$ ${total.toLocaleString()}`;
+    document.getElementById('checkoutSummary').innerText = `訂單概要：\n${summary}\n\n應付總額：NT$ ${total.toLocaleString()}`;
     toggleCart(false);
     document.getElementById('overlay').classList.add('show');
     document.getElementById('checkoutModal').classList.add('show');
@@ -269,7 +270,6 @@
     document.getElementById('overlay').classList.remove('show');
   }
 
-  // 3. 送出資料
   function sendToGoogle() {
     const data = {
       name: document.getElementById('cName').value,
@@ -283,6 +283,7 @@
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const items = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
 
+    // Google Form ID
     const formID = "1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q";
     const googleURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?`;
     
@@ -298,7 +299,7 @@
     });
 
     fetch(googleURL + params.toString(), { mode: 'no-cors' }).then(() => {
-      alert("訂單已送出，請檢查電子郵件明細。");
+      alert("訂單已送出，請檢查電子郵件確認信。");
       cart = []; updateUI(); closeAll();
     });
   }
