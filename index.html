@@ -10,6 +10,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; font-weight: 300; }
 
+  /* 導覽列 */
   nav { position: fixed; top: 0; width: 100%; z-index: 100; display: flex; justify-content: space-between; padding: 1.2rem 5%; background: rgba(249, 247, 244, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--soft); }
   .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.2em; text-decoration: none; color: var(--ink); }
   .nav-logo span { color: var(--accent); }
@@ -20,30 +21,33 @@
   .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
   .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; margin-bottom: 100px; }
   
-  /* 商品卡片優化 */
-  .product-card { background: white; transition: 0.3s; display: flex; flex-direction: column; }
+  /* 商品卡片與按鈕強制顯現樣式 */
+  .product-card { background: white; border: 1px solid #f0f0f0; display: flex; flex-direction: column; overflow: hidden; }
   .img-box { aspect-ratio: 1/1; overflow: hidden; background: #eee; }
   .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
   .product-card:hover img { transform: scale(1.05); }
 
-  /* 按鈕修改為永遠顯示 */
+  .p-info { padding: 20px; text-align: center; background: white; flex-grow: 1; display: flex; flex-direction: column; }
+  .p-name { font-size: 0.9rem; margin-bottom: 8px; min-height: 2.7em; font-weight: 400; }
+  .p-price { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-weight: 500; margin-bottom: 15px; display: block; }
+
+  /* 強制黑色按鈕樣式 */
   .add-btn { 
     width: 100%; 
-    padding: 15px; 
-    background: var(--ink); 
-    color: white; 
+    padding: 14px; 
+    background: #1a1a1a !important; /* 強制黑色背景 */
+    color: #ffffff !important;    /* 強制白色文字 */
     border: none; 
     cursor: pointer; 
-    font-size: 0.8rem; 
+    font-size: 0.75rem; 
     letter-spacing: 0.2em; 
     transition: 0.3s;
-    margin-top: auto; /* 確保按鈕在底部對齊 */
+    margin-top: auto;
+    display: block !important;    /* 強制顯示 */
+    opacity: 1 !important; 
+    visibility: visible !important;
   }
-  .add-btn:hover { background: var(--accent); }
-
-  .p-info { padding: 20px 10px; text-align: center; }
-  .p-name { font-size: 0.9rem; margin-bottom: 8px; min-height: 2.7em; } /* 統一名稱高度 */
-  .p-price { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-weight: 500; margin-bottom: 15px; display: block; }
+  .add-btn:hover { background: var(--accent) !important; }
 
   /* 彈窗樣式 */
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: 0.4s; z-index: 200; }
@@ -54,17 +58,12 @@
   .modal { top: 50%; left: 50%; width: 450px; max-width: 90vw; transform: translate(-50%, 100%); border-radius: 12px; max-height: 85vh; overflow-y: auto; display: none; }
   .modal.show { display: block; transform: translate(-50%, -50%); }
 
-  /* 規格藥丸型按鈕 */
+  /* 藥丸型規格按鈕 (依據截圖 2026-05-14) */
   .variant-group { margin-bottom: 25px; }
   .variant-title { font-size: 0.9rem; margin-bottom: 12px; display: block; font-weight: 500; }
   .chip-container { display: flex; flex-wrap: wrap; gap: 10px; }
   .chip { padding: 8px 20px; border: 1px solid var(--soft); border-radius: 25px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; background: white; }
   .chip.selected { background: #eeeeee; border-color: var(--ink); font-weight: 500; }
-
-  .form-item { margin-bottom: 15px; }
-  .form-item label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 5px; }
-  .form-input { width: 100%; padding: 12px; border: 1px solid var(--soft); outline: none; }
-  .main-btn { width: 100%; padding: 18px; background: var(--ink); color: white; border: none; cursor: pointer; letter-spacing: 0.2em; font-size: 0.8rem; margin-top: 20px; }
 
   .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
   .cart-img { width: 60px; height: 60px; object-fit: cover; }
@@ -88,7 +87,7 @@
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-<!-- 規格選擇彈窗 -->
+<!-- 規格彈窗 -->
 <div id="variantModal" class="drawer modal">
   <h2 id="modalTitle" style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Select Options</h2>
   <div id="variantSelectors"></div>
@@ -100,7 +99,7 @@
       <button onclick="changeQty(1)" style="width:30px; height:30px; border:1px solid var(--soft);">+</button>
     </div>
   </div>
-  <button class="main-btn" onclick="confirmAdd()">ADD TO BAG</button>
+  <button class="main-btn" style="background: #1a1a1a; color: white;" onclick="confirmAdd()">ADD TO BAG</button>
 </div>
 
 <!-- 購物車 -->
@@ -111,25 +110,26 @@
     <div style="display:flex; justify-content:space-between; font-size: 1.2rem; margin-bottom: 20px;">
       <span>Total</span><span id="cartTotal">NT$ 0</span>
     </div>
-    <button class="main-btn" onclick="openCheckout()">CHECKOUT</button>
+    <button class="main-btn" style="background: #1a1a1a; color: white;" onclick="openCheckout()">CHECKOUT</button>
   </div>
 </div>
 
 <!-- 結帳表單 -->
 <div id="checkoutModal" class="drawer modal">
   <h2 style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Shipping Detail</h2>
-  <div class="form-item"><label>收件姓名</label><input type="text" id="cName" class="form-input"></div>
-  <div class="form-item"><label>電話</label><input type="tel" id="cPhone" class="form-input"></div>
-  <div class="form-item"><label>電子信箱</label><input type="email" id="cEmail" class="form-input"></div>
-  <div class="form-item"><label>7-11 門市</label><input type="text" id="cStore" class="form-input"></div>
-  <div class="form-item"><label>匯款末五碼</label><input type="text" id="cBank" class="form-input"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">收件姓名</label><input type="text" id="cName" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">電話</label><input type="tel" id="cPhone" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">電子信箱</label><input type="email" id="cEmail" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">7-11 門市</label><input type="text" id="cStore" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">匯款末五碼</label><input type="text" id="cBank" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
   <div id="checkoutSummary" style="font-size: 0.8rem; background: #f0f0f0; padding: 15px; margin-top: 10px; line-height: 1.6;"></div>
-  <button class="main-btn" onclick="sendToGoogle()">CONFIRM & SEND</button>
+  <button class="main-btn" style="background: #1a1a1a; color: white;" onclick="sendToGoogle()">CONFIRM & SEND</button>
 </div>
 
 <div id="toast"></div>
 
 <script>
+  // 資料來源設定
   const SHEET_ID = "1w0TnBgPXoN7geL4XjPpAW5D2Flok6kwXxfUzr72gSBc";
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
@@ -195,14 +195,11 @@
       if(parts.length < 2) return;
       const [label, optsStr] = parts;
       const opts = optsStr.split(',');
-      
       const groupDiv = document.createElement('div');
       groupDiv.className = 'variant-group';
       groupDiv.innerHTML = `<span class="variant-title">${label}</span>`;
-      
       const chipContainer = document.createElement('div');
       chipContainer.className = 'chip-container';
-      
       opts.forEach((o, idx) => {
         const chip = document.createElement('div');
         chip.className = 'chip';
@@ -248,7 +245,6 @@
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     document.getElementById('cartCount').innerText = count;
     document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
-    
     document.getElementById('cartItems').innerHTML = cart.map((i, idx) => `
       <div class="cart-item">
         <img src="${i.img}" class="cart-img">
@@ -295,6 +291,7 @@
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const items = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
 
+    // Google Form ID
     const formID = "1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q";
     const googleURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?`;
     
