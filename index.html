@@ -10,47 +10,44 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; padding-top: 80px; font-weight: 300; }
 
-  /* 導覽列 */
   nav { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; padding: 1.2rem 5%; background: rgba(249, 247, 244, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--soft); }
   .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.2em; text-decoration: none; color: var(--ink); }
-  .nav-logo span { color: var(--accent); }
   .cart-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; position: relative; }
   .cart-count { position: absolute; top: -5px; right: -10px; background: var(--accent); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; }
 
   .container { max-width: 1200px; margin: 0 auto; padding: 40px 5%; }
   .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; }
   
-  /* 首頁商品卡片 */
-  .product-card { background: white; border: 1px solid #f0f0f0; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; }
+  .product-card { background: white; border: 1px solid #f0f0f0; cursor: pointer; transition: 0.3s; }
   .img-box { width: 100%; aspect-ratio: 1/1; overflow: hidden; }
-  .img-box img { width: 100%; height: 100%; object-fit: cover; }
-  .p-info { padding: 20px; text-align: center; }
+  .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }[cite: 1]
+  .product-card:hover img { transform: scale(1.1); }[cite: 1]
+  
+  /* 首頁品項與價錢靠左對齊 */
+  .p-info { padding: 20px; text-align: left; }[cite: 1]
 
-  /* 詳情頁遮罩與視窗 */
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 2000; overflow-y: auto; }
   .detail-page { background: white; width: 100%; max-width: 600px; margin: 40px auto; position: relative; padding: 0; border-radius: 8px; overflow: hidden; }
   .close-detail { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; border: none; background: rgba(255,255,255,0.8); width: 35px; height: 35px; border-radius: 50%; z-index: 10; }
   
-  .detail-body { padding: 30px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .info-tag { font-size: 0.75rem; background: #f0f0f0; padding: 6px 12px; border-radius: 4px; color: #555; margin-bottom: 10px; width: 100%; text-align: left; }
+  .detail-body { padding: 30px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }[cite: 1]
+  .info-tag { font-size: 0.75rem; background: #f0f0f0; padding: 6px 12px; border-radius: 4px; color: #555; margin-bottom: 10px; display: inline-block; }[cite: 1]
   
-  .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; justify-content: center; }
-  .chip { padding: 8px 18px; border: 1px solid #ddd; border-radius: 25px; font-size: 0.8rem; cursor: pointer; }
+  .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; justify-content: flex-start; }[cite: 1]
+  .chip { padding: 8px 18px; border: 1px solid #ddd; border-radius: 25px; font-size: 0.8rem; cursor: pointer; background: white; }
   .chip.selected { background: #1a1a1a; color: white; border-color: #1a1a1a; }
   
-  .add-btn { width: 100%; padding: 18px; background: #1a1a1a; color: white; border: none; margin-top: 20px; cursor: pointer; letter-spacing: 0.2em; font-size: 0.9rem; }
+  /* 加入購物車按鈕文字置中 */
+  .add-btn { width: 100%; padding: 18px; background: #1a1a1a; color: white; border: none; margin-top: 20px; cursor: pointer; letter-spacing: 0.2em; font-size: 0.9rem; text-align: center; }[cite: 1]
   .detail-images-list img { width: 100%; margin-bottom: 15px; display: block; }
 
-  /* 購物車與結帳視窗樣式 */
   .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; background: white; z-index: 2001; transform: translateX(100%); transition: 0.4s; padding: 30px; display: flex; flex-direction: column; }
   .drawer.show { transform: translateX(0); }
-  
   .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; z-index: 2500; padding: 40px; width: 500px; max-width: 95vw; border-radius: 12px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
   .modal.show { display: block; }
   .form-group { margin-bottom: 15px; text-align: left; }
   .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 5px; }
   .form-group input { width: 100%; padding: 12px; border: 1px solid var(--soft); outline: none; font-size: 0.9rem; }
-  
   .store-link { display: inline-block; margin-top: 5px; font-size: 0.75rem; color: var(--accent); text-decoration: underline; cursor: pointer; }
   .checkout-summary-box { background: #f8f6f2; padding: 20px; margin-bottom: 20px; border-radius: 4px; font-size: 0.85rem; }
 </style>
@@ -66,15 +63,12 @@
   <div class="products-grid" id="productGrid">正在載入商品...</div>
 </div>
 
-<!-- 遮罩層 -->
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-<!-- 商品詳情詳情頁 -->
 <div class="overlay" id="detailOverlay" style="display:none; z-index: 2000;">
   <div class="detail-page" id="detailContent"></div>
 </div>
 
-<!-- 購物車側欄 -->
 <div id="cartDrawer" class="drawer">
   <h2 style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Shopping Bag</h2>
   <div id="cartItems" style="flex: 1; overflow-y: auto;"></div>
@@ -86,13 +80,9 @@
   </div>
 </div>
 
-<!-- 結帳表單 -->
 <div id="checkoutModal" class="modal">
   <h2 style="margin-bottom: 25px; font-family: 'Cormorant Garamond'; letter-spacing: 1px;">Checkout</h2>
-  
-  <!-- 訂單摘要與金額 -->
   <div class="checkout-summary-box" id="checkoutSummary"></div>
-
   <div class="form-group"><label>收件姓名</label><input type="text" id="cName"></div>
   <div class="form-group"><label>連絡電話</label><input type="tel" id="cPhone"></div>
   <div class="form-group"><label>電子郵件</label><input type="email" id="cEmail"></div>
@@ -102,13 +92,11 @@
     <a href="https://emap.pcsc.com.tw/" target="_blank" class="store-link">查詢711門市</a>
   </div>
   <div class="form-group"><label>匯款帳號末五碼</label><input type="text" id="cBank"></div>
-  
   <button class="add-btn" onclick="sendToGoogle()">確認並送出訂單</button>
   <button onclick="closeAll()" style="width:100%; background:none; border:none; margin-top:15px; cursor:pointer; font-size:0.8rem; color:#aaa;">返回購物車</button>
 </div>
 
 <script>
-  // 資料來源設定
   const SHEET_ID = "1w0TnBgPXoN7geL4XjPpAW5D2Flok6kwXxfUzr72gSBc";
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
@@ -134,7 +122,7 @@
         detailImgs: r.c[7]?.v || ""
       }));
       renderProducts();
-    } catch (e) { console.error("資料載入失敗", e); }
+    } catch (e) { console.error("Error", e); }
   }
 
   function renderProducts() {
@@ -154,12 +142,11 @@
     selectedVariants = {};
     currentQty = 1;
 
-    // 處理規格選項
     let vHTML = "";
     if (currentProduct.variants && currentProduct.variants.trim() !== "") {
       currentProduct.variants.split('|').forEach(g => {
         const [label, opts] = g.split(':');
-        vHTML += `<p style="font-size:0.8rem; margin-top:15px;">${label}</p><div class="chip-container">`;
+        vHTML += `<p style="font-size:0.8rem; margin-top:15px; width: 100%; text-align: left;">${label}</p><div class="chip-container">`;[cite: 1]
         opts.split(',').forEach((o, idx) => {
           vHTML += `<div class="chip ${idx===0?'selected':''}" onclick="selectChip(this,'${label}','${o.trim()}')">${o.trim()}</div>`;
           if(idx===0) selectedVariants[label] = o.trim();
@@ -168,25 +155,18 @@
       });
     }
 
-    // 詳細圖網址處理
     const dImgs = currentProduct.detailImgs ? currentProduct.detailImgs.split(',').map(s => `<img src="${s.trim()}">`).join('') : "";
 
     document.getElementById('detailContent').innerHTML = `
       <button class="close-detail" onclick="closeDetail()">✕</button>
-      <!-- 1. 主圖 -->
       <img src="${currentProduct.img}" style="width:100%;">
       <div class="detail-body">
-        <!-- 2. 品名 -->
-        <h1 style="font-size:1.3rem;">${currentProduct.name}</h1>
-        <!-- 3. 價格 -->
-        <div style="font-size:1.4rem; color:var(--accent); margin:10px 0 20px;">NT$ ${currentProduct.price.toLocaleString()}</div>
+        <h1 style="font-size:1.3rem; width: 100%; text-align: left;">${currentProduct.name}</h1>
+        <div style="font-size:1.4rem; color:var(--accent); margin:10px 0 20px; width: 100%; text-align: left;">NT$ ${currentProduct.price.toLocaleString()}</div>
         
-        <!-- 4. 滿額福利 -->
         <div class="info-tag">滿額福利：${currentProduct.bonus}</div>
-        <!-- 5. 出貨時間 -->
         <div class="info-tag">出貨時間：${currentProduct.shipTime}</div>
 
-        <!-- 6. 規格與數量選擇 -->
         <div style="width:100%; text-align:left;">
           ${vHTML}
           <p style="font-size:0.8rem; margin-top:15px;">購買數量</p>
@@ -195,13 +175,12 @@
             <span id="detailQty">1</span>
             <button onclick="changeQty(1)" style="width:35px; height:35px; border:1px solid #ddd; background:none;">+</button>
           </div>
-          <!-- 7. 加入購物車按鈕 -->
           <button class="add-btn" onclick="addToBag()">加入購物車</button>
         </div>
 
-        <!-- 8. 購物須知與詳細圖 -->
         <div class="detail-images-list" style="margin-top:40px; width:100%;">
-          <p style="font-size:0.7rem; color:#aaa; margin-bottom:20px; letter-spacing:0.2em;">購物須知</p>
+          <!-- 購物須知標題置中 -->
+          <p style="font-size:0.7rem; color:#aaa; margin-bottom:20px; letter-spacing:0.2em; text-align: center;">購物須知</p>[cite: 1]
           ${dImgs}
         </div>
       </div>
@@ -247,15 +226,7 @@
     if(!cart.length) return;
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const itemsText = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join('<br>');
-    
-    document.getElementById('checkoutSummary').innerHTML = `
-      <div style="font-weight:500; border-bottom:1px solid #ddd; margin-bottom:10px; padding-bottom:10px;">訂單內容：</div>
-      <div style="max-height:80px; overflow-y:auto; margin-bottom:10px; color:#666;">${itemsText}</div>
-      <div style="border-top:1px solid #ddd; padding-top:10px; font-size:1.1rem; color:var(--accent); font-weight:600;">
-        總計金額：NT$ ${total.toLocaleString()}
-      </div>
-    `;
-    
+    document.getElementById('checkoutSummary').innerHTML = `<div style="font-weight:500; border-bottom:1px solid #ddd; margin-bottom:10px; padding-bottom:10px;">訂單內容：</div><div style="max-height:80px; overflow-y:auto; margin-bottom:10px; color:#666;">${itemsText}</div><div style="border-top:1px solid #ddd; padding-top:10px; font-size:1.1rem; color:var(--accent); font-weight:600;">總計金額：NT$ ${total.toLocaleString()}</div>`;
     toggleCart(false);
     document.getElementById('overlay').style.display = "block";
     document.getElementById('checkoutModal').classList.add('show');
@@ -264,25 +235,10 @@
   function sendToGoogle() {
     const d = { n: document.getElementById('cName').value, p: document.getElementById('cPhone').value, e: document.getElementById('cEmail').value, s: document.getElementById('cStore').value, b: document.getElementById('cBank').value };
     if(Object.values(d).some(v => !v)) return alert("請完整填寫收件資訊。");
-    
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const items = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
-    
-    const params = new URLSearchParams({ 
-      "entry.1529348949": d.n, 
-      "entry.202851324": d.p, 
-      "entry.2118948816": d.e, 
-      "entry.393497125": d.s, 
-      "entry.1338477873": d.b, 
-      "entry.1788102968": items, 
-      "entry.1235108622": total, 
-      "submit": "Submit" 
-    });
-    
-    fetch(`https://docs.google.com/forms/d/e/1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q/formResponse?${params.toString()}`, { mode: 'no-cors' }).then(() => {
-      alert("訂單已成功送出！請至 Email 查看您的訂單明細。"); 
-      cart = []; updateUI(); closeAll();
-    });
+    const params = new URLSearchParams({ "entry.1529348949": d.n, "entry.202851324": d.p, "entry.2118948816": d.e, "entry.393497125": d.s, "entry.1338477873": d.b, "entry.1788102968": items, "entry.1235108622": total, "submit": "Submit" });
+    fetch(`https://docs.google.com/forms/d/e/1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q/formResponse?${params.toString()}`, { mode: 'no-cors' }).then(() => { alert("訂單已成功送出！請至 Email 查看您的訂單明細。"); cart = []; updateUI(); closeAll(); });
   }
 
   function closeDetail() { document.getElementById('detailOverlay').style.display = "none"; document.body.style.overflow = "auto"; }
