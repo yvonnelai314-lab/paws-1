@@ -20,23 +20,23 @@
   
   .product-card { background: white; border: 1px solid #f0f0f0; cursor: pointer; transition: 0.3s; }
   .img-box { width: 100%; aspect-ratio: 1/1; overflow: hidden; }
-  .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }[cite: 1]
-  .product-card:hover img { transform: scale(1.1); }[cite: 1]
-  .p-info { padding: 20px; text-align: center; }
+  .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .product-card:hover img { transform: scale(1.1); }
+  
+  .p-info { padding: 20px; text-align: left; }
 
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 2000; overflow-y: auto; }
   .detail-page { background: white; width: 100%; max-width: 600px; margin: 40px auto; position: relative; padding: 0; border-radius: 8px; overflow: hidden; }
   .close-detail { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; border: none; background: rgba(255,255,255,0.8); width: 35px; height: 35px; border-radius: 50%; z-index: 10; }
   
-  .detail-body { padding: 30px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }[cite: 1]
-  .info-tag { font-size: 0.75rem; background: #f0f0f0; padding: 6px 12px; border-radius: 4px; color: #555; margin-bottom: 10px; display: inline-block; }[cite: 1]
+  .detail-body { padding: 30px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+  .info-tag { font-size: 0.75rem; background: #f0f0f0; padding: 6px 12px; border-radius: 4px; color: #555; margin-bottom: 10px; display: inline-block; }
   
-  .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; justify-content: flex-start; }[cite: 1]
+  .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 20px; justify-content: flex-start; }
   .chip { padding: 8px 18px; border: 1px solid #ddd; border-radius: 25px; font-size: 0.8rem; cursor: pointer; background: white; }
   .chip.selected { background: #1a1a1a; color: white; border-color: #1a1a1a; }
   
-  /* 加入購物車按鈕置中 */
-  .add-btn { width: 100%; padding: 18px; background: #1a1a1a; color: white; border: none; margin-top: 20px; cursor: pointer; letter-spacing: 0.2em; font-size: 0.9rem; text-align: center; }[cite: 1]
+  .add-btn { width: 100%; padding: 18px; background: #1a1a1a; color: white; border: none; margin-top: 20px; cursor: pointer; letter-spacing: 0.2em; font-size: 0.9rem; text-align: center; }
   .detail-images-list img { width: 100%; margin-bottom: 15px; display: block; }
 
   .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; background: white; z-index: 2001; transform: translateX(100%); transition: 0.4s; padding: 30px; display: flex; flex-direction: column; }
@@ -142,12 +142,19 @@
 
     let vHTML = "";
     if (currentProduct.variants && currentProduct.variants.trim() !== "") {
-      currentProduct.variants.split('|').forEach(g => {
-        const [label, opts] = g.split(':');
-        vHTML += `<p style="font-size:0.8rem; margin-top:15px; width: 100%; text-align: left;">${label}</p><div class="chip-container">`;[cite: 1]
-        opts.split(',').forEach((o, idx) => {
-          vHTML += `<div class="chip ${idx===0?'selected':''}" onclick="selectChip(this,'${label}','${o.trim()}')">${o.trim()}</div>`;
-          if(idx===0) selectedVariants[label] = o.trim();
+      const groups = currentProduct.variants.split('|');
+      groups.forEach(g => {
+        const parts = g.split(':');
+        if (parts.length < 2) return;
+        const label = parts[0];
+        const opts = parts[1].split(',');
+        
+        vHTML += `<p style="font-size:0.8rem; margin-top:15px; width: 100%; text-align: left;">${label}</p>`;
+        vHTML += `<div class="chip-container">`;
+        opts.forEach((o, idx) => {
+          const optName = o.trim();
+          vHTML += `<div class="chip ${idx === 0 ? 'selected' : ''}" onclick="selectChip(this, '${label}', '${optName}')">${optName}</div>`;
+          if (idx === 0) selectedVariants[label] = optName;
         });
         vHTML += `</div>`;
       });
@@ -177,8 +184,7 @@
         </div>
 
         <div class="detail-images-list" style="margin-top:40px; width:100%;">
-          <!-- 購物須知標題置中 -->
-          <p style="font-size:0.7rem; color:#aaa; margin-bottom:20px; letter-spacing:0.2em; text-align: center;">購物須知</p>[cite: 1]
+          <p style="font-size:0.7rem; color:#aaa; margin-bottom:20px; letter-spacing:0.2em; text-align: center;">購物須知</p>
           ${dImgs}
         </div>
       </div>
@@ -193,7 +199,10 @@
     selectedVariants[label] = val;
   }
 
-  function changeQty(n) { currentQty = Math.max(1, currentQty + n); document.getElementById('detailQty').innerText = currentQty; }
+  function changeQty(n) { 
+    currentQty = Math.max(1, currentQty + n); 
+    document.getElementById('detailQty').innerText = currentQty; 
+  }
 
   function addToBag() {
     const vStr = Object.values(selectedVariants).join(' / ') || "Standard";
