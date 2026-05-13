@@ -8,66 +8,61 @@
 <style>
   :root { --ink: #1a1a1a; --paper: #f9f7f4; --accent: #b08e61; --soft: #e5e0d8; --muted: #7a736a; --white: #ffffff; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; font-weight: 300; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; padding-top: 80px; }
 
-  /* 導覽列 */
-  nav { position: fixed; top: 0; width: 100%; z-index: 100; display: flex; justify-content: space-between; padding: 1.2rem 5%; background: rgba(249, 247, 244, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--soft); }
+  nav { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; padding: 1.2rem 5%; background: rgba(249, 247, 244, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--soft); }
   .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.2em; text-decoration: none; color: var(--ink); }
   .nav-logo span { color: var(--accent); }
   .cart-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; position: relative; }
   .cart-count { position: absolute; top: -5px; right: -10px; background: var(--accent); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; }
 
-  .hero { height: 40vh; display: flex; align-items: center; justify-content: center; background: #222; color: white; font-family: 'Cormorant Garamond', serif; font-size: 4rem; letter-spacing: 0.2em; margin-bottom: 4rem; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
-  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; margin-bottom: 100px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 5%; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px; }
   
-  /* 商品卡片與按鈕強制顯現樣式 */
-  .product-card { background: white; border: 1px solid #f0f0f0; display: flex; flex-direction: column; overflow: hidden; }
-  .img-box { aspect-ratio: 1/1; overflow: hidden; background: #eee; }
-  .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-  .product-card:hover img { transform: scale(1.05); }
+  /* 商品卡片強制樣式 */
+  .product-card { background: white; border: 1px solid #f0f0f0; display: flex; flex-direction: column; height: 100%; }
+  .img-box { width: 100%; aspect-ratio: 1/1; overflow: hidden; background: #eee; }
+  .img-box img { width: 100%; height: 100%; object-fit: cover; }
 
-  .p-info { padding: 20px; text-align: center; background: white; flex-grow: 1; display: flex; flex-direction: column; }
-  .p-name { font-size: 0.9rem; margin-bottom: 8px; min-height: 2.7em; font-weight: 400; }
-  .p-price { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-weight: 500; margin-bottom: 15px; display: block; }
+  .p-info { padding: 20px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .p-name { font-size: 0.9rem; margin-bottom: 10px; font-weight: 500; height: 2.8em; overflow: hidden; }
+  .p-price { font-family: 'Cormorant Garamond', serif; color: var(--accent); font-weight: 500; margin-bottom: 15px; font-size: 1.1rem; }
 
-  /* 強制黑色按鈕樣式 */
+  /* 永遠顯示的黑色按鈕 */
   .add-btn { 
+    display: block !important; 
     width: 100%; 
-    padding: 14px; 
-    background: #1a1a1a !important; /* 強制黑色背景 */
-    color: #ffffff !important;    /* 強制白色文字 */
+    padding: 15px; 
+    background: #1a1a1a !important; 
+    color: #ffffff !important; 
     border: none; 
     cursor: pointer; 
-    font-size: 0.75rem; 
-    letter-spacing: 0.2em; 
-    transition: 0.3s;
-    margin-top: auto;
-    display: block !important;    /* 強制顯示 */
-    opacity: 1 !important; 
+    font-size: 0.8rem; 
+    letter-spacing: 0.15em; 
+    text-transform: uppercase;
+    margin-top: 10px;
     visibility: visible !important;
+    opacity: 1 !important;
   }
   .add-btn:hover { background: var(--accent) !important; }
 
   /* 彈窗樣式 */
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: 0.4s; z-index: 200; }
-  .overlay.show { opacity: 1; pointer-events: all; }
-  .drawer { position: fixed; background: white; z-index: 201; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px; display: flex; flex-direction: column; }
-  #cartDrawer { top: 0; right: 0; bottom: 0; width: 400px; transform: translateX(100%); }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
+  .overlay.show { display: block; }
+  .drawer { position: fixed; background: white; z-index: 2001; transition: 0.4s ease; padding: 30px; }
+  #cartDrawer { top: 0; right: 0; bottom: 0; width: 400px; transform: translateX(100%); display: flex; flex-direction: column; }
   #cartDrawer.show { transform: translateX(0); }
-  .modal { top: 50%; left: 50%; width: 450px; max-width: 90vw; transform: translate(-50%, 100%); border-radius: 12px; max-height: 85vh; overflow-y: auto; display: none; }
-  .modal.show { display: block; transform: translate(-50%, -50%); }
+  .modal { top: 50%; left: 50%; width: 450px; max-width: 90vw; transform: translate(-50%, -50%) scale(0.9); border-radius: 12px; display: none; }
+  .modal.show { display: block; transform: translate(-50%, -50%) scale(1); }
 
-  /* 藥丸型規格按鈕 (依據截圖 2026-05-14) */
-  .variant-group { margin-bottom: 25px; }
-  .variant-title { font-size: 0.9rem; margin-bottom: 12px; display: block; font-weight: 500; }
-  .chip-container { display: flex; flex-wrap: wrap; gap: 10px; }
-  .chip { padding: 8px 20px; border: 1px solid var(--soft); border-radius: 25px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; background: white; }
+  /* 規格選擇按鈕 */
+  .chip-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0 25px; }
+  .chip { padding: 8px 20px; border: 1px solid var(--soft); border-radius: 25px; font-size: 0.85rem; cursor: pointer; background: white; }
   .chip.selected { background: #eeeeee; border-color: var(--ink); font-weight: 500; }
 
   .cart-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
   .cart-img { width: 60px; height: 60px; object-fit: cover; }
-  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; padding: 12px 30px; border-radius: 4px; font-size: 0.8rem; display: none; z-index: 1000; }
+  #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; padding: 12px 30px; border-radius: 4px; font-size: 0.8rem; display: none; z-index: 3000; }
 </style>
 </head>
 <body>
@@ -77,32 +72,30 @@
   <button class="cart-btn" onclick="toggleCart(true)">🛍 <span class="cart-count" id="cartCount">0</span></button>
 </nav>
 
-<div class="hero">PAWS</div>
-
 <div class="container">
   <div class="products-grid" id="productGrid">
-    <p style="text-align: center; grid-column: 1/-1;">正在載入精選選物...</p>
+    <p style="text-align: center; grid-column: 1/-1;">正在載入 PAWS 精選選物...</p>
   </div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-<!-- 規格彈窗 -->
+<!-- 規格選擇彈窗 -->
 <div id="variantModal" class="drawer modal">
   <h2 id="modalTitle" style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Select Options</h2>
   <div id="variantSelectors"></div>
-  <div class="variant-group">
-    <span class="variant-title">數量</span>
-    <div style="display: flex; align-items: center; gap: 20px;">
-      <button onclick="changeQty(-1)" style="width:30px; height:30px; border:1px solid var(--soft);">-</button>
+  <div style="margin-bottom: 20px;">
+    <span style="font-size: 0.9rem; font-weight: 500;">數量</span>
+    <div style="display: flex; align-items: center; gap: 20px; margin-top: 10px;">
+      <button onclick="changeQty(-1)" style="width:30px; height:30px; border:1px solid #ddd;">-</button>
       <span id="modalQty">1</span>
-      <button onclick="changeQty(1)" style="width:30px; height:30px; border:1px solid var(--soft);">+</button>
+      <button onclick="changeQty(1)" style="width:30px; height:30px; border:1px solid #ddd;">+</button>
     </div>
   </div>
-  <button class="main-btn" style="background: #1a1a1a; color: white;" onclick="confirmAdd()">ADD TO BAG</button>
+  <button class="add-btn" onclick="confirmAdd()">ADD TO BAG</button>
 </div>
 
-<!-- 購物車 -->
+<!-- 購物車側欄 -->
 <div id="cartDrawer" class="drawer">
   <h2 style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Your Bag</h2>
   <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
@@ -110,26 +103,25 @@
     <div style="display:flex; justify-content:space-between; font-size: 1.2rem; margin-bottom: 20px;">
       <span>Total</span><span id="cartTotal">NT$ 0</span>
     </div>
-    <button class="main-btn" style="background: #1a1a1a; color: white;" onclick="openCheckout()">CHECKOUT</button>
+    <button class="add-btn" onclick="openCheckout()">CHECKOUT</button>
   </div>
 </div>
 
 <!-- 結帳表單 -->
 <div id="checkoutModal" class="drawer modal">
   <h2 style="margin-bottom: 20px; font-family: 'Cormorant Garamond';">Shipping Detail</h2>
-  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">收件姓名</label><input type="text" id="cName" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
-  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">電話</label><input type="tel" id="cPhone" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
-  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">電子信箱</label><input type="email" id="cEmail" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
-  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">7-11 門市</label><input type="text" id="cStore" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
-  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">匯款末五碼</label><input type="text" id="cBank" style="width:100%; padding:12px; border:1px solid #e5e0d8;"></div>
-  <div id="checkoutSummary" style="font-size: 0.8rem; background: #f0f0f0; padding: 15px; margin-top: 10px; line-height: 1.6;"></div>
-  <button class="main-btn" style="background: #1a1a1a; color: white;" onclick="sendToGoogle()">CONFIRM & SEND</button>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">收件姓名</label><input type="text" id="cName" style="width:100%; padding:10px;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">電話</label><input type="tel" id="cPhone" style="width:100%; padding:10px;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">電子信箱</label><input type="email" id="cEmail" style="width:100%; padding:10px;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">7-11 門市</label><input type="text" id="cStore" style="width:100%; padding:10px;"></div>
+  <div style="margin-bottom: 15px;"><label style="font-size: 0.75rem;">匯款末五碼</label><input type="text" id="cBank" style="width:100%; padding:10px;"></div>
+  <div id="checkoutSummary" style="font-size: 0.8rem; background: #f5f5f5; padding: 15px; margin: 10px 0;"></div>
+  <button class="add-btn" onclick="sendToGoogle()">SEND ORDER</button>
 </div>
 
 <div id="toast"></div>
 
 <script>
-  // 資料來源設定
   const SHEET_ID = "1w0TnBgPXoN7geL4XjPpAW5D2Flok6kwXxfUzr72gSBc";
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
@@ -152,19 +144,21 @@
         variants: r.c[4]?.v || ""
       }));
       renderProducts();
-    } catch (e) { console.error("抓取失敗", e); }
+    } catch (e) { 
+        document.getElementById('productGrid').innerHTML = "<p>抓取失敗，請確認試算表權限。</p>";
+    }
   }
 
   function renderProducts() {
     const grid = document.getElementById('productGrid');
     grid.innerHTML = PRODUCTS.map(p => `
       <div class="product-card">
-        <div class="img-box">
-          <img src="${p.img}">
-        </div>
+        <div class="img-box"><img src="${p.img}"></div>
         <div class="p-info">
-          <div class="p-name">${p.name}</div>
-          <span class="p-price">NT$ ${p.price.toLocaleString()}</span>
+          <div>
+            <div class="p-name">${p.name}</div>
+            <div class="p-price">NT$ ${p.price.toLocaleString()}</div>
+          </div>
           <button class="add-btn" onclick="handleAddToCart(${p.id})">ADD TO BAG</button>
         </div>
       </div>
@@ -175,7 +169,6 @@
     currentProduct = PRODUCTS.find(p => p.id === id);
     currentModalQty = 1;
     selectedVariants = {};
-
     if (!currentProduct.variants || currentProduct.variants.trim() === "") {
       addDirectly("Standard", 1);
     } else {
@@ -196,8 +189,7 @@
       const [label, optsStr] = parts;
       const opts = optsStr.split(',');
       const groupDiv = document.createElement('div');
-      groupDiv.className = 'variant-group';
-      groupDiv.innerHTML = `<span class="variant-title">${label}</span>`;
+      groupDiv.innerHTML = `<span style="font-size: 0.8rem; color: #777;">${label}</span>`;
       const chipContainer = document.createElement('div');
       chipContainer.className = 'chip-container';
       opts.forEach((o, idx) => {
@@ -206,7 +198,7 @@
         chip.innerText = o.trim();
         if(idx === 0) { chip.classList.add('selected'); selectedVariants[label] = o.trim(); }
         chip.onclick = () => {
-          groupDiv.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+          chipContainer.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
           chip.classList.add('selected');
           selectedVariants[label] = o.trim();
         };
@@ -216,7 +208,7 @@
       container.appendChild(groupDiv);
     });
 
-    document.getElementById('overlay').classList.add('show');
+    document.getElementById('overlay').style.display = 'block';
     document.getElementById('variantModal').classList.add('show');
   }
 
@@ -241,10 +233,8 @@
   }
 
   function updateUI() {
-    const count = cart.reduce((s, i) => s + i.qty, 0);
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById('cartCount').innerText = count;
-    document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
+    document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartTotal').innerText = `NT$ ${cart.reduce((s, i) => s + i.price * i.qty, 0).toLocaleString()}`;
     document.getElementById('cartItems').innerHTML = cart.map((i, idx) => `
       <div class="cart-item">
         <img src="${i.img}" class="cart-img">
@@ -259,23 +249,22 @@
 
   function remove(idx) { cart.splice(idx, 1); updateUI(); }
   function toggleCart(show) { 
-    document.getElementById('overlay').classList.toggle('show', show);
+    document.getElementById('overlay').style.display = show ? 'block' : 'none';
     document.getElementById('cartDrawer').classList.toggle('show', show);
   }
 
   function openCheckout() {
     if(!cart.length) return;
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const summary = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
-    document.getElementById('checkoutSummary').innerText = `訂單概要：\n${summary}\n\n應付總額：NT$ ${total.toLocaleString()}`;
+    const items = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
+    document.getElementById('checkoutSummary').innerText = `訂單：${items}`;
     toggleCart(false);
-    document.getElementById('overlay').classList.add('show');
+    document.getElementById('overlay').style.display = 'block';
     document.getElementById('checkoutModal').classList.add('show');
   }
 
   function closeAll() {
+    document.getElementById('overlay').style.display = 'none';
     document.querySelectorAll('.drawer').forEach(d => d.classList.remove('show'));
-    document.getElementById('overlay').classList.remove('show');
   }
 
   function sendToGoogle() {
@@ -286,29 +275,22 @@
       store: document.getElementById('cStore').value,
       bank: document.getElementById('cBank').value
     };
-    if(Object.values(data).some(v => !v)) return alert("請填寫完整資訊");
+    if(Object.values(data).some(v => !v)) return alert("請填寫資訊");
 
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const items = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
 
-    // Google Form ID
     const formID = "1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q";
     const googleURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?`;
-    
     const params = new URLSearchParams({
-      "entry.1529348949": data.name,
-      "entry.202851324": data.phone,
-      "entry.2118948816": data.email,
-      "entry.393497125": data.store,
-      "entry.1338477873": data.bank,
-      "entry.1788102968": items,
-      "entry.1235108622": total,
-      "submit": "Submit"
+      "entry.1529348949": data.name, "entry.202851324": data.phone,
+      "entry.2118948816": data.email, "entry.393497125": data.store,
+      "entry.1338477873": data.bank, "entry.1788102968": items,
+      "entry.1235108622": total, "submit": "Submit"
     });
 
     fetch(googleURL + params.toString(), { mode: 'no-cors' }).then(() => {
-      alert("訂單已送出，請檢查電子郵件確認信。");
-      cart = []; updateUI(); closeAll();
+      alert("訂單已送出"); cart = []; updateUI(); closeAll();
     });
   }
 
