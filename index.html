@@ -13,6 +13,7 @@
     --soft: #e5e0d8;
     --muted: #7a736a;
     --white: #ffffff;
+    --shadow: 0 10px 30px rgba(0,0,0,0.05);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,6 +24,7 @@
     background: var(--paper);
     color: var(--ink);
     font-weight: 300;
+    overflow-x: hidden;
   }
 
   /* ── NAVIGATION ── */
@@ -56,7 +58,7 @@
   /* ── HERO ── */
   .hero {
     height: 60vh; display: flex; align-items: center; justify-content: center;
-    background: #222 url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000') no-repeat center/cover;
+    text-align: center; background: #222 url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000') no-repeat center/cover;
     background-blend-mode: overlay;
   }
   .hero-title {
@@ -65,7 +67,7 @@
     letter-spacing: 0.1em;
   }
 
-  /* ── PRODUCTS ── */
+  /* ── PRODUCT GRID ── */
   .section-header { text-align: center; padding: 6rem 2rem 3rem; }
   .section-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; }
 
@@ -74,9 +76,14 @@
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 3rem;
   }
 
-  .product-card { position: relative; background: var(--white); }
-  .product-img-wrapper { aspect-ratio: 1/1; overflow: hidden; position: relative; background: #eee; }
-  .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+  .product-card { position: relative; background: var(--white); transition: var(--shadow); }
+  .product-img-wrapper {
+    aspect-ratio: 1/1; overflow: hidden; position: relative; background: #eee;
+  }
+  .product-img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
   .product-card:hover .product-img { transform: scale(1.08); }
 
   .add-to-cart {
@@ -87,10 +94,10 @@
   .product-img-wrapper:hover .add-to-cart { transform: translateY(0); }
 
   .product-info { padding: 1.5rem 1rem; text-align: center; }
-  .product-name { font-size: 0.95rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .product-name { font-size: 0.95rem; font-weight: 400; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
   .product-price { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--accent); }
 
-  /* ── DRAWER ── */
+  /* ── DRAWERS (CART & CHECKOUT) ── */
   .drawer-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
     opacity: 0; pointer-events: none; transition: opacity 0.4s;
@@ -105,6 +112,7 @@
   }
   .drawer.open { transform: translateX(0); }
 
+  /* Checkout Modal specific styling */
   #checkoutModal {
     right: auto; left: 50%; transform: translateX(-50%) translateY(100%);
     bottom: auto; top: 5%; height: 90vh; border-radius: 12px;
@@ -116,26 +124,39 @@
 
   .cart-items { flex: 1; overflow-y: auto; }
   .cart-item { display: flex; gap: 1.2rem; margin-bottom: 1.5rem; align-items: center; border-bottom: 1px solid #f9f9f9; padding-bottom: 1rem; }
-  .cart-item-img { width: 60px; height: 60px; object-fit: cover; }
+  .cart-item-img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; }
+  .cart-item-info { flex: 1; }
 
-  /* ── FORM ── */
+  .total-row { display: flex; justify-content: space-between; font-size: 1.4rem; margin: 1.5rem 0; font-family: 'Cormorant Garamond', serif; }
+
+  /* ── FORM ELEMENTS ── */
   .form-group { margin-bottom: 1.2rem; }
-  .form-label { font-size: 0.7rem; color: var(--muted); display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; }
-  .form-input { width: 100%; padding: 0.8rem; border: 1px solid var(--soft); background: var(--paper); font-size: 0.9rem; outline: none; }
+  .form-label { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 0.5rem; text-transform: uppercase; }
+  .form-input {
+    width: 100%; padding: 0.8rem; border: 1px solid var(--soft); background: var(--paper);
+    font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.3s;
+  }
+  .form-input:focus { border-color: var(--accent); }
 
   .primary-btn {
     width: 100%; padding: 1.2rem; background: var(--ink); color: var(--white);
-    border: none; letter-spacing: 0.3em; cursor: pointer; text-transform: uppercase; font-size: 0.8rem;
+    border: none; letter-spacing: 0.3em; cursor: pointer; transition: background 0.3s;
+    font-size: 0.8rem; text-transform: uppercase;
   }
   .primary-btn:hover { background: var(--accent); }
 
   #toast {
     position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(150%);
-    background: var(--ink); color: var(--white); padding: 1rem 2.5rem; font-size: 0.8rem; transition: transform 0.4s; z-index: 1000;
+    background: var(--ink); color: var(--white); padding: 1rem 2.5rem;
+    font-size: 0.8rem; letter-spacing: 0.15em; transition: transform 0.4s; z-index: 1000;
   }
   #toast.show { transform: translateX(-50%) translateY(0); }
 
-  @media (max-width: 768px) { nav { padding: 1rem 2rem; } #checkoutModal { width: 95vw; } }
+  @media (max-width: 768px) {
+    nav { padding: 1rem 2rem; }
+    .nav-links { display: none; }
+    #checkoutModal { width: 95vw; top: 2%; height: 96vh; }
+  }
 </style>
 </head>
 <body>
@@ -147,49 +168,76 @@
   </button>
 </nav>
 
-<section class="hero"><h1 class="hero-title">PAWS</h1></section>
+<section class="hero">
+  <h1 class="hero-title">PAWS</h1>
+</section>
 
 <section id="products">
   <div class="section-header">
     <span style="letter-spacing: 0.3em; font-size: 0.7rem; color: var(--accent);">CURATED COLLECTION</span>
     <h2 class="section-title">New Arrivals</h2>
   </div>
-  <div class="product-container"><div class="products-grid" id="productGrid"></div></div>
+
+  <div class="product-container">
+    <div class="products-grid" id="productGrid"></div>
+  </div>
 </section>
 
-<!-- 購物車 -->
+<!-- 購物車側欄 -->
 <div class="drawer-overlay" id="overlay" onclick="toggleCart()"></div>
 <div class="drawer" id="cartDrawer">
   <div class="drawer-header">
     <h2 class="drawer-title">Shopping Bag</h2>
-    <button onclick="toggleCart()" style="background:none; border:none; cursor:pointer;">✕</button>
+    <button onclick="toggleCart()" style="background:none; border:none; cursor:pointer; font-size: 1.2rem;">✕</button>
   </div>
   <div class="cart-items" id="cartItems"></div>
-  <div class="drawer-footer">
-    <div style="display:flex; justify-content:space-between; margin: 1.5rem 0; font-family:'Cormorant Garamond',serif; font-size:1.4rem;">
-      <span>Total</span><span id="cartTotal">NT$ 0</span>
+  <div class="cart-footer">
+    <div class="total-row">
+      <span>Total</span>
+      <span id="cartTotal">NT$ 0</span>
     </div>
     <button class="primary-btn" onclick="openCheckout()">Checkout ❯</button>
   </div>
 </div>
 
-<!-- 結帳彈窗 -->
+<!-- 結帳表單彈窗 -->
 <div class="drawer-overlay" id="checkoutOverlay" onclick="closeCheckout()"></div>
 <div class="drawer" id="checkoutModal">
   <div class="drawer-header">
     <h2 class="drawer-title">Shipping & Payment</h2>
     <button onclick="closeCheckout()" style="background:none; border:none; cursor:pointer;">✕</button>
   </div>
-  <div style="overflow-y: auto; flex: 1;">
-    <p style="font-size:0.75rem; color:var(--accent); margin-bottom:1.5rem;">※ 請匯款完成後再填寫訂單</p>
-    <div class="form-group"><label class="form-label">收件人姓名</label><input type="text" id="custName" class="form-input"></div>
-    <div class="form-group"><label class="form-label">電話</label><input type="tel" id="custPhone" class="form-input"></div>
-    <div class="form-group"><label class="form-label">電子信箱</label><input type="email" id="custEmail" class="form-input"></div>
-    <div class="form-group"><label class="form-label">7-11 收件門市</label>
-      <div style="display:flex; gap:8px;"><input type="text" id="custStore" class="form-input"><a href="https://emap.pcsc.com.tw/" target="_blank" style="font-size:0.6rem; color:var(--accent); text-decoration:none; align-self:center; border:1px solid; padding:4px;">查詢</a></div>
+  <div style="overflow-y: auto; flex: 1; padding-right: 5px;">
+    <p style="font-size:0.75rem; color:var(--accent); margin-bottom:1.5rem;">※ 請先匯款完成後再填寫訂單</p>
+    
+    <div class="form-group">
+      <label class="form-label">收件人姓名</label>
+      <input type="text" id="custName" class="form-input" placeholder="真實姓名">
     </div>
-    <div class="form-group"><label class="form-label">匯款帳號末五碼</label><input type="text" id="custBank" class="form-input"></div>
-    <div id="orderSummary" style="background:#f0f0f0; padding:1.2rem; margin:1.5rem 0; font-size:0.85rem; line-height:1.6;"></div>
+    <div class="form-group">
+      <label class="form-label">電話</label>
+      <input type="tel" id="custPhone" class="form-input" placeholder="09xx-xxx-xxx">
+    </div>
+    <div class="form-group">
+      <label class="form-label">電子信箱</label>
+      <input type="email" id="custEmail" class="form-input" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">7-11 收件門市</label>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="custStore" class="form-input" placeholder="店名或店號">
+        <a href="https://emap.pcsc.com.tw/" target="_blank" style="font-size:0.65rem; color:var(--accent); align-self:center; text-decoration:none; white-space:nowrap; border:1px solid var(--accent); padding: 5px 8px;">查詢門市</a>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">匯款帳號末五碼</label>
+      <input type="text" id="custBank" class="form-input" placeholder="匯款後填寫">
+    </div>
+    
+    <div id="orderSummary" style="background:#f0f0f0; padding:1.5rem; margin:1.5rem 0; font-size:0.85rem;">
+        <!-- 自動帶入訂單摘要 -->
+    </div>
+    
     <button class="primary-btn" onclick="sendToGoogle()">Confirm & Send ❯</button>
   </div>
 </div>
@@ -197,6 +245,7 @@
 <div id="toast">Added to bag</div>
 
 <script>
+  // 1. 商品資料區
   const PRODUCTS = [
     { id: 1, name: "Mardi Mercredi 經典大學T", price: 1850, img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800" },
     { id: 2, name: "Le Labo 日本限定香氛 15ml", price: 3200, img: "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?q=80&w=800" },
@@ -209,85 +258,130 @@
   let cart = [];
 
   function renderProducts() {
-    document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = PRODUCTS.map(p => `
       <div class="product-card">
         <div class="product-img-wrapper">
-          <img src="${p.img}" class="product-img">
+          <img src="${p.img}" alt="${p.name}" class="product-img">
           <button class="add-to-cart" onclick="addToCart(${p.id})">ADD TO BAG</button>
         </div>
         <div class="product-info">
           <h3 class="product-name">${p.name}</h3>
           <p class="product-price">NT$ ${p.price.toLocaleString()}</p>
         </div>
-      </div>`).join('');
+      </div>
+    `).join('');
   }
 
   function addToCart(id) {
-    const p = PRODUCTS.find(x => x.id === id);
-    const item = cart.find(x => x.id === id);
-    if (item) item.qty++; else cart.push({ ...p, qty: 1 });
+    const product = PRODUCTS.find(p => p.id === id);
+    const existing = cart.find(item => item.id === id);
+    if (existing) existing.qty += 1;
+    else cart.push({ ...product, qty: 1 });
     updateCartUI();
-    showToast('Added to bag');
+    showToast(`Added to Bag`);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCartUI();
   }
 
   function updateCartUI() {
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+    const count = cart.reduce((sum, item) => sum + item.qty, 0);
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    document.getElementById('cartCount').innerText = count;
     document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
-    document.getElementById('cartItems').innerHTML = cart.map(i => `
-      <div class="cart-item">
-        <img src="${i.img}" class="cart-item-img">
-        <div class="cart-item-info">
-          <p style="font-size:0.85rem;">${i.name}</p>
-          <p style="font-size:0.75rem; color:var(--accent);">NT$ ${i.price.toLocaleString()} x ${i.qty}</p>
+    
+    const cartItemsEl = document.getElementById('cartItems');
+    if (cart.length === 0) {
+      cartItemsEl.innerHTML = '<p style="text-align:center; color:var(--muted); margin-top:3rem; font-size:0.8rem;">Your bag is currently empty.</p>';
+    } else {
+      cartItemsEl.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <img src="${item.img}" class="cart-item-img">
+          <div class="cart-item-info">
+            <p style="font-size:0.85rem; font-weight:400;">${item.name}</p>
+            <p style="font-size:0.75rem; color:var(--accent);">NT$ ${item.price.toLocaleString()} x ${item.qty}</p>
+          </div>
+          <button onclick="removeFromCart(${item.id})" style="background:none; border:none; cursor:pointer; color:#ccc;">✕</button>
         </div>
-        <button onclick="removeFromCart(${i.id})" style="background:none; border:none; color:#ccc; cursor:pointer;">✕</button>
-      </div>`).join('');
+      `).join('');
+    }
   }
 
-  function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
-  function toggleCart() { document.getElementById('cartDrawer').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+  function toggleCart() {
+    document.getElementById('cartDrawer').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+
   function openCheckout() {
-    if(!cart.length) return;
-    const items = cart.map(i => `${i.name}(${i.qty})`).join(', ');
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById('orderSummary').innerHTML = `<strong>訂單內容：</strong><br>${items}<br><strong>總額：NT$ ${total.toLocaleString()}</strong>`;
-    toggleCart(); document.getElementById('checkoutModal').classList.add('open'); document.getElementById('checkoutOverlay').classList.add('open');
+    if (cart.length === 0) return alert('袋子裡還沒有商品喔！');
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const itemsList = cart.map(item => `${item.name}(${item.qty})`).join(', ');
+    
+    document.getElementById('orderSummary').innerHTML = `
+        <strong>訂單摘要：</strong><br>${itemsList}<br>
+        <strong>應付總額：NT$ ${total.toLocaleString()}</strong>
+    `;
+    
+    toggleCart();
+    document.getElementById('checkoutModal').classList.add('open');
+    document.getElementById('checkoutOverlay').classList.add('open');
   }
-  function closeCheckout() { document.getElementById('checkoutModal').classList.remove('open'); document.getElementById('checkoutOverlay').classList.remove('open'); }
 
+  function closeCheckout() {
+    document.getElementById('checkoutModal').classList.remove('open');
+    document.getElementById('checkoutOverlay').classList.remove('open');
+  }
+
+  // 2. Google 表單串接區
   function sendToGoogle() {
     const name = document.getElementById('custName').value;
     const phone = document.getElementById('custPhone').value;
     const email = document.getElementById('custEmail').value;
     const store = document.getElementById('custStore').value;
     const bank = document.getElementById('custBank').value;
-    if (!name || !phone || !email || !store || !bank) return alert('請完整填寫資訊');
 
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const itemsList = cart.map(i => `${i.name}x${i.qty}`).join(', ');
+    if (!name || !phone || !store || !bank) return alert('請填寫完整收件資訊與匯款末五碼');
 
-    const formID = "1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q";
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const itemsList = cart.map(item => `${item.name}x${item.qty}`).join(', ');
+
+    // 🔗 請替換為你的 Google 表單 ID 與欄位編號 (entry.xxxx)
+    const formID = "你的Google表單ID"; 
     const googleURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?`;
     
     const params = new URLSearchParams({
-        "entry.1529348949": name,
-        "entry.202851324": phone,
-        "entry.2118948816": email,
-        "entry.393497125": store,
-        "entry.1338477873": bank,
-        "entry.1788102968": itemsList,
-        "entry.1235108622": total,
+        "entry.1111111": name,      // 姓名
+        "entry.2222222": phone,     // 電話
+        "entry.3333333": email,     // 信箱
+        "entry.4444444": store,     // 門市
+        "entry.5555555": bank,      // 末五碼
+        "entry.6666666": itemsList, // 訂單清單
+        "entry.7777777": total,     // 總金額
         "submit": "Submit"
     });
 
     fetch(googleURL + params.toString(), { mode: 'no-cors' })
-      .then(() => { alert('訂單已送出！請核對信箱確認信。'); cart = []; updateCartUI(); closeCheckout(); })
-      .catch(() => alert('提交失敗'));
+        .then(() => {
+            alert('PAWS 已收到您的訂單！\n我們將核對匯款資訊後安排採買。');
+            cart = [];
+            updateCartUI();
+            closeCheckout();
+        })
+        .catch(() => alert('提交失敗，請檢查網路或聯繫客服'));
   }
 
-  function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
   renderProducts();
 </script>
+
 </body>
 </html>
