@@ -124,7 +124,9 @@
   }
 
   function renderProducts() {
-    document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
+    const grid = document.getElementById('productGrid');
+    if (!grid) return;
+    grid.innerHTML = PRODUCTS.map(p => `
       <div class="product-card" onclick="openDetail(${p.id})">
         <div class="img-box"><img src="${p.img}"></div>
         <div class="p-info">
@@ -149,20 +151,29 @@
         const label = parts[0];
         const opts = parts[1].split(',');
         
-        vHTML += `<p style="font-size:0.8rem; margin-top:15px; width: 100%; text-align: left;">${label}</p>`;
-        vHTML += `<div class="chip-container">`;
+        vHTML += '<p style="font-size:0.8rem; margin-top:15px; width: 100%; text-align: left;">' + label + '</p>';
+        vHTML += '<div class="chip-container">';
         opts.forEach((o, idx) => {
           const optName = o.trim();
-          vHTML += `<div class="chip ${idx === 0 ? 'selected' : ''}" onclick="selectChip(this, '${label}', '${optName}')">${optName}</div>`;
+          const isSelected = idx === 0 ? 'selected' : '';
+          vHTML += '<div class="chip ' + isSelected + '" onclick="selectChip(this, \'' + label + '\', \'' + optName + '\')">' + optName + '</div>';
           if (idx === 0) selectedVariants[label] = optName;
         });
-        vHTML += `</div>`;
+        vHTML += '</div>';
       });
     }
 
-    const dImgs = currentProduct.detailImgs ? currentProduct.detailImgs.split(',').map(s => `<img src="${s.trim()}">`).join('') : "";
+    const dImgsArray = currentProduct.detailImgs ? currentProduct.detailImgs.split(',') : [];
+    let dImgsHTML = "";
+    dImgsArray.forEach(s => {
+      dImgsHTML += '<img src="' + s.trim() + '">';
+    });
 
-    document.getElementById('detailContent').innerHTML = `
+    const detailContainer = document.getElementById('detailContent');
+    detailContainer.innerHTML = ''; // 清空
+
+    // 建立詳情內容
+    const contentHTML = `
       <button class="close-detail" onclick="closeDetail()">✕</button>
       <img src="${currentProduct.img}" style="width:100%;">
       <div class="detail-body">
@@ -185,72 +196,132 @@
 
         <div class="detail-images-list" style="margin-top:40px; width:100%;">
           <p style="font-size:0.7rem; color:#aaa; margin-bottom:20px; letter-spacing:0.2em; text-align: center;">購物須知</p>
-          ${dImgs}
+          ${dImgsHTML}
         </div>
       </div>
     `;
+    detailContainer.innerHTML = contentHTML;
+    
     document.getElementById('detailOverlay').style.display = "block";
     document.body.style.overflow = "hidden";
   }
 
   function selectChip(el, label, val) {
-    el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    const chips = el.parentElement.querySelectorAll('.chip');
+    chips.forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     selectedVariants[label] = val;
   }
 
   function changeQty(n) { 
     currentQty = Math.max(1, currentQty + n); 
-    document.getElementById('detailQty').innerText = currentQty; 
+    const qtySpan = document.getElementById('detailQty');
+    if (qtySpan) qtySpan.innerText = currentQty; 
   }
 
   function addToBag() {
     const vStr = Object.values(selectedVariants).join(' / ') || "Standard";
-    const key = `${currentProduct.id}-${vStr}`;
-    const exist = cart.find(i => `${i.id}-${i.variant}` === key);
-    if(exist) exist.qty += currentQty;
-    else cart.push({...currentProduct, variant: vStr, qty: currentQty});
-    closeDetail(); updateUI(); toggleCart(true);
+    const key = currentProduct.id + "-" + vStr;
+    const exist = cart.find(i => (i.id + "-" + i.variant) === key);
+    if(exist) {
+      exist.qty += currentQty;
+    } else {
+      cart.push({...currentProduct, variant: vStr, qty: currentQty});
+    }
+    closeDetail(); 
+    updateUI(); 
+    toggleCart(true);
   }
 
   function updateUI() {
+    const count = cart.reduce((s, i) => s + i.qty, 0);
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
-    document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
-    document.getElementById('cartItems').innerHTML = cart.map((i, idx) => `
+    
+    document.getElementById('cartCount').innerText = count;
+    document.getElementById('cartTotal').innerText = 'NT$ ' + total.toLocaleString();
+    
+    const itemsContainer = document.getElementById('cartItems');
+    itemsContainer.innerHTML = cart.map((i, idx) => `
       <div style="display:flex; gap:15px; padding:15px 0; border-bottom:1px solid #eee;">
         <img src="${i.img}" style="width:60px; height:60px; object-fit:cover;">
         <div style="flex:1">
           <div style="font-size:0.8rem;">${i.name}</div>
-          <div style="font-size:0.7rem; color:var(--accent);">${i.variant==='Standard'?'':'['+i.variant+']'} NT$ ${i.price.toLocaleString()} x ${i.qty}</div>
+          <div style="font-size:0.7rem; color:var(--accent);">${i.variant === 'Standard' ? '' : '[' + i.variant + ']'} NT$ ${i.price.toLocaleString()} x ${i.qty}</div>
         </div>
-        <button onclick="cart.splice(${idx},1); updateUI();" style="background:none; border:none; color:#ccc; cursor:pointer;">✕</button>
+        <button onclick="removeFromCart(${idx})" style="background:none; border:none; color:#ccc; cursor:pointer;">✕</button>
       </div>
     `).join('');
+  }
+
+  function removeFromCart(idx) {
+    cart.splice(idx, 1);
+    updateUI();
   }
 
   function openCheckout() {
     if(!cart.length) return;
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const itemsText = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join('<br>');
-    document.getElementById('checkoutSummary').innerHTML = `<div style="font-weight:500; border-bottom:1px solid #ddd; margin-bottom:10px; padding-bottom:10px;">訂單內容：</div><div style="max-height:80px; overflow-y:auto; margin-bottom:10px; color:#666;">${itemsText}</div><div style="border-top:1px solid #ddd; padding-top:10px; font-size:1.1rem; color:var(--accent); font-weight:600;">總計金額：NT$ ${total.toLocaleString()}</div>`;
+    const itemsText = cart.map(i => i.name + (i.variant === 'Standard' ? '' : '(' + i.variant + ')') + 'x' + i.qty).join('<br>');
+    
+    document.getElementById('checkoutSummary').innerHTML = 
+      '<div style="font-weight:500; border-bottom:1px solid #ddd; margin-bottom:10px; padding-bottom:10px;">訂單內容：</div>' +
+      '<div style="max-height:80px; overflow-y:auto; margin-bottom:10px; color:#666;">' + itemsText + '</div>' +
+      '<div style="border-top:1px solid #ddd; padding-top:10px; font-size:1.1rem; color:var(--accent); font-weight:600;">總計金額：NT$ ' + total.toLocaleString() + '</div>';
+    
     toggleCart(false);
     document.getElementById('overlay').style.display = "block";
     document.getElementById('checkoutModal').classList.add('show');
   }
 
   function sendToGoogle() {
-    const d = { n: document.getElementById('cName').value, p: document.getElementById('cPhone').value, e: document.getElementById('cEmail').value, s: document.getElementById('cStore').value, b: document.getElementById('cBank').value };
+    const d = { 
+      n: document.getElementById('cName').value, 
+      p: document.getElementById('cPhone').value, 
+      e: document.getElementById('cEmail').value, 
+      s: document.getElementById('cStore').value, 
+      b: document.getElementById('cBank').value 
+    };
     if(Object.values(d).some(v => !v)) return alert("請完整填寫收件資訊。");
+    
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const items = cart.map(i => `${i.name}${i.variant==='Standard'?'':'('+i.variant+')'}x${i.qty}`).join(', ');
-    const params = new URLSearchParams({ "entry.1529348949": d.n, "entry.202851324": d.p, "entry.2118948816": d.e, "entry.393497125": d.s, "entry.1338477873": d.b, "entry.1788102968": items, "entry.1235108622": total, "submit": "Submit" });
-    fetch(`https://docs.google.com/forms/d/e/1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q/formResponse?${params.toString()}`, { mode: 'no-cors' }).then(() => { alert("訂單已成功送出！請至 Email 查看您的訂單明細。"); cart = []; updateUI(); closeAll(); });
+    const items = cart.map(i => i.name + (i.variant === 'Standard' ? '' : '(' + i.variant + ')') + 'x' + i.qty).join(', ');
+    
+    const params = new URLSearchParams({ 
+      "entry.1529348949": d.n, 
+      "entry.202851324": d.p, 
+      "entry.2118948816": d.e, 
+      "entry.393497125": d.s, 
+      "entry.1338477873": d.b, 
+      "entry.1788102968": items, 
+      "entry.1235108622": total, 
+      "submit": "Submit" 
+    });
+    
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSfDTwFEZ1ILXx7JsYuWnJyAm02EKYmB6tTdrcxt3IWTBe3a1Q/formResponse?' + params.toString(), { mode: 'no-cors' }).then(() => { 
+      alert("訂單已成功送出！請至 Email 查看您的訂單明細。"); 
+      cart = []; 
+      updateUI(); 
+      closeAll(); 
+    });
   }
 
-  function closeDetail() { document.getElementById('detailOverlay').style.display = "none"; document.body.style.overflow = "auto"; }
-  function toggleCart(s) { document.getElementById('cartDrawer').classList.toggle('show', s); document.getElementById('overlay').style.display = s ? "block" : "none"; }
-  function closeAll() { document.getElementById('overlay').style.display = "none"; document.getElementById('detailOverlay').style.display = "none"; document.getElementById('cartDrawer').classList.remove('show'); document.getElementById('checkoutModal').classList.remove('show'); document.body.style.overflow = "auto"; }
+  function closeDetail() { 
+    document.getElementById('detailOverlay').style.display = "none"; 
+    document.body.style.overflow = "auto"; 
+  }
+
+  function toggleCart(s) { 
+    document.getElementById('cartDrawer').classList.toggle('show', s); 
+    document.getElementById('overlay').style.display = s ? "block" : "none"; 
+  }
+
+  function closeAll() { 
+    document.getElementById('overlay').style.display = "none"; 
+    document.getElementById('detailOverlay').style.display = "none"; 
+    document.getElementById('cartDrawer').classList.remove('show'); 
+    document.getElementById('checkoutModal').classList.remove('show'); 
+    document.body.style.overflow = "auto"; 
+  }
 
   window.onload = fetchProducts;
 </script>
