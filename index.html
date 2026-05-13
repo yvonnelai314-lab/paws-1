@@ -3,385 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAWS | 日韓潮流選物官網</title>
+<title>PAWS | 日韓潮流選物</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a1a1a;
-    --paper: #f9f7f4;
-    --accent: #b08e61;
-    --soft: #e5e0d8;
-    --muted: #7a736a;
-    --white: #ffffff;
-    --shadow: 0 10px 30px rgba(0,0,0,0.05);
-  }
-
+  :root { --ink: #1a1a1a; --paper: #f9f7f4; --accent: #b08e61; --soft: #e5e0d8; --muted: #7a736a; --white: #ffffff; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-  /* ── NAVIGATION ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.2rem 4rem;
-    background: rgba(249, 247, 244, 0.85);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(176, 142, 97, 0.1);
-  }
-
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem; letter-spacing: 0.2em;
-    color: var(--ink); text-decoration: none;
-  }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--paper); color: var(--ink); font-weight: 300; overflow-x: hidden; }
+  
+  /* 導覽列 */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 4rem; background: rgba(249, 247, 244, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(176, 142, 97, 0.1); }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.2em; color: var(--ink); text-decoration: none; }
   .nav-logo span { color: var(--accent); }
+  .cart-btn { position: relative; background: none; border: none; cursor: pointer; font-size: 1.2rem; }
+  .cart-count { position: absolute; top: -5px; right: -8px; background: var(--accent); color: #fff; font-size: 0.6rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-  .cart-btn {
-    position: relative; background: none; border: none; cursor: pointer;
-    font-size: 1.2rem; color: var(--ink);
-  }
-  .cart-count {
-    position: absolute; top: -5px; right: -8px;
-    background: var(--accent); color: #fff;
-    font-size: 0.6rem; width: 18px; height: 18px;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  }
+  /* 主視覺 */
+  .hero { height: 50vh; display: flex; align-items: center; justify-content: center; background: #222 url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000') no-repeat center/cover; background-blend-mode: overlay; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: 6rem; color: #fff; letter-spacing: 0.1em; }
 
-  /* ── HERO ── */
-  .hero {
-    height: 60vh; display: flex; align-items: center; justify-content: center;
-    text-align: center; background: #222 url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000') no-repeat center/cover;
-    background-blend-mode: overlay;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(4rem, 10vw, 7rem); font-weight: 300; color: var(--white);
-    letter-spacing: 0.1em;
-  }
-
-  /* ── PRODUCT GRID ── */
-  .section-header { text-align: center; padding: 6rem 2rem 3rem; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; }
-
-  .product-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem 8rem; }
-  .products-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 3rem;
-  }
-
-  .product-card { position: relative; background: var(--white); transition: var(--shadow); }
-  .product-img-wrapper {
-    aspect-ratio: 1/1; overflow: hidden; position: relative; background: #eee;
-  }
-  .product-img {
-    width: 100%; height: 100%; object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .product-card:hover .product-img { transform: scale(1.08); }
-
-  .add-to-cart {
-    position: absolute; bottom: 0; left: 0; right: 0; background: var(--ink); color: #fff;
-    padding: 1.2rem; font-size: 0.75rem; letter-spacing: 0.2em; text-align: center;
-    transform: translateY(100%); transition: transform 0.3s; cursor: pointer; border: none;
-  }
+  /* 商品區 */
+  .product-container { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2.5rem; }
+  .product-card { background: var(--white); position: relative; }
+  .product-img-wrapper { aspect-ratio: 1/1; overflow: hidden; position: relative; background: #eee; }
+  .product-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+  .product-card:hover .product-img { transform: scale(1.05); }
+  .add-to-cart { position: absolute; bottom: 0; left: 0; right: 0; background: var(--ink); color: #fff; padding: 1rem; border: none; transform: translateY(100%); transition: 0.3s; cursor: pointer; font-size: 0.75rem; letter-spacing: 0.2em; }
   .product-img-wrapper:hover .add-to-cart { transform: translateY(0); }
-
   .product-info { padding: 1.5rem 1rem; text-align: center; }
-  .product-name { font-size: 0.95rem; font-weight: 400; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
   .product-price { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--accent); }
 
-  /* ── DRAWERS (CART & CHECKOUT) ── */
-  .drawer-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
-    opacity: 0; pointer-events: none; transition: opacity 0.4s;
-  }
+  /* 側欄與彈窗 */
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; pointer-events: none; transition: 0.4s; }
   .drawer-overlay.open { opacity: 1; pointer-events: all; }
-
-  .drawer {
-    position: fixed; top: 0; right: 0; bottom: 0; width: 450px; max-width: 100vw;
-    background: var(--white); z-index: 201; transform: translateX(100%);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex; flex-direction: column; padding: 2.5rem;
-  }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 450px; max-width: 100vw; background: var(--white); z-index: 201; transform: translateX(100%); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; padding: 2rem; }
   .drawer.open { transform: translateX(0); }
-
-  /* Checkout Modal specific styling */
-  #checkoutModal {
-    right: auto; left: 50%; transform: translateX(-50%) translateY(100%);
-    bottom: auto; top: 5%; height: 90vh; border-radius: 12px;
-  }
+  #checkoutModal { right: auto; left: 50%; transform: translateX(-50%) translateY(100%); bottom: auto; top: 5%; height: 90vh; border-radius: 12px; }
   #checkoutModal.open { transform: translateX(-50%) translateY(0); }
 
-  .drawer-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--soft); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
-  .drawer-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; }
-
-  .cart-items { flex: 1; overflow-y: auto; }
-  .cart-item { display: flex; gap: 1.2rem; margin-bottom: 1.5rem; align-items: center; border-bottom: 1px solid #f9f9f9; padding-bottom: 1rem; }
-  .cart-item-img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; }
-  .cart-item-info { flex: 1; }
-
-  .total-row { display: flex; justify-content: space-between; font-size: 1.4rem; margin: 1.5rem 0; font-family: 'Cormorant Garamond', serif; }
-
-  /* ── FORM ELEMENTS ── */
-  .form-group { margin-bottom: 1.2rem; }
-  .form-label { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 0.5rem; text-transform: uppercase; }
-  .form-input {
-    width: 100%; padding: 0.8rem; border: 1px solid var(--soft); background: var(--paper);
-    font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.3s;
-  }
-  .form-input:focus { border-color: var(--accent); }
-
-  .primary-btn {
-    width: 100%; padding: 1.2rem; background: var(--ink); color: var(--white);
-    border: none; letter-spacing: 0.3em; cursor: pointer; transition: background 0.3s;
-    font-size: 0.8rem; text-transform: uppercase;
-  }
+  /* 表單 */
+  .form-group { margin-bottom: 1rem; }
+  .form-label { font-size: 0.7rem; color: var(--muted); display: block; margin-bottom: 0.3rem; text-transform: uppercase; }
+  .form-input { width: 100%; padding: 0.8rem; border: 1px solid var(--soft); background: var(--paper); outline: none; }
+  .primary-btn { width: 100%; padding: 1.2rem; background: var(--ink); color: #fff; border: none; cursor: pointer; letter-spacing: 0.2em; font-size: 0.8rem; }
   .primary-btn:hover { background: var(--accent); }
 
-  #toast {
-    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(150%);
-    background: var(--ink); color: var(--white); padding: 1rem 2.5rem;
-    font-size: 0.8rem; letter-spacing: 0.15em; transition: transform 0.4s; z-index: 1000;
-  }
-  #toast.show { transform: translateX(-50%) translateY(0); }
-
-  @media (max-width: 768px) {
-    nav { padding: 1rem 2rem; }
-    .nav-links { display: none; }
-    #checkoutModal { width: 95vw; top: 2%; height: 96vh; }
-  }
+  @media (max-width: 768px) { nav { padding: 1rem 2rem; } #checkoutModal { width: 95vw; } }
 </style>
 </head>
 <body>
 
 <nav>
   <a href="#" class="nav-logo">PAW<span>S</span></a>
-  <button class="cart-btn" onclick="toggleCart()">
-    🛍 <span class="cart-count" id="cartCount">0</span>
-  </button>
+  <button class="cart-btn" onclick="toggleCart()">🛍 <span class="cart-count" id="cartCount">0</span></button>
 </nav>
 
-<section class="hero">
-  <h1 class="hero-title">PAWS</h1>
-</section>
+<section class="hero"><h1 class="hero-title">PAWS</h1></section>
 
-<section id="products">
-  <div class="section-header">
-    <span style="letter-spacing: 0.3em; font-size: 0.7rem; color: var(--accent);">CURATED COLLECTION</span>
-    <h2 class="section-title">New Arrivals</h2>
-  </div>
-
-  <div class="product-container">
-    <div class="products-grid" id="productGrid"></div>
-  </div>
-</section>
+<div class="product-container">
+  <div class="products-grid" id="productGrid"><p style="text-align:center; grid-column: 1/-1;">正在從後台載入商品...</p></div>
+</div>
 
 <!-- 購物車側欄 -->
 <div class="drawer-overlay" id="overlay" onclick="toggleCart()"></div>
 <div class="drawer" id="cartDrawer">
-  <div class="drawer-header">
-    <h2 class="drawer-title">Shopping Bag</h2>
-    <button onclick="toggleCart()" style="background:none; border:none; cursor:pointer; font-size: 1.2rem;">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-footer">
-    <div class="total-row">
-      <span>Total</span>
-      <span id="cartTotal">NT$ 0</span>
-    </div>
+  <h2 style="font-family: 'Cormorant Garamond', serif; margin-bottom: 2rem;">Shopping Bag</h2>
+  <div id="cartItems" style="flex:1; overflow-y:auto;"></div>
+  <div style="border-top: 1px solid var(--soft); padding-top: 1rem;">
+    <p id="cartTotal" style="font-size: 1.5rem; margin-bottom: 1rem; font-family: 'Cormorant Garamond', serif;">NT$ 0</p>
     <button class="primary-btn" onclick="openCheckout()">Checkout ❯</button>
   </div>
 </div>
 
-<!-- 結帳表單彈窗 -->
+<!-- 結帳彈窗 -->
 <div class="drawer-overlay" id="checkoutOverlay" onclick="closeCheckout()"></div>
 <div class="drawer" id="checkoutModal">
-  <div class="drawer-header">
-    <h2 class="drawer-title">Shipping & Payment</h2>
-    <button onclick="closeCheckout()" style="background:none; border:none; cursor:pointer;">✕</button>
-  </div>
-  <div style="overflow-y: auto; flex: 1; padding-right: 5px;">
-    <p style="font-size:0.75rem; color:var(--accent); margin-bottom:1.5rem;">※ 請先匯款完成後再填寫訂單</p>
-    
+  <h2 style="font-family: 'Cormorant Garamond', serif; margin-bottom: 1.5rem;">Shipping Information</h2>
+  <div style="overflow-y:auto; flex: 1;">
+    <div class="form-group"><label class="form-label">收件人姓名</label><input type="text" id="custName" class="form-input"></div>
+    <div class="form-group"><label class="form-label">電話</label><input type="tel" id="custPhone" class="form-input"></div>
+    <div class="form-group"><label class="form-label">電子信箱</label><input type="email" id="custEmail" class="form-input"></div>
     <div class="form-group">
-      <label class="form-label">收件人姓名</label>
-      <input type="text" id="custName" class="form-input" placeholder="真實姓名">
-    </div>
-    <div class="form-group">
-      <label class="form-label">電話</label>
-      <input type="tel" id="custPhone" class="form-input" placeholder="09xx-xxx-xxx">
-    </div>
-    <div class="form-group">
-      <label class="form-label">電子信箱</label>
-      <input type="email" id="custEmail" class="form-input" placeholder="your@email.com">
-    </div>
-    <div class="form-group">
-      <label class="form-label">7-11 收件門市</label>
-      <div style="display:flex; gap:8px;">
+      <label class="form-label">7-11 門市</label>
+      <div style="display:flex; gap:5px;">
         <input type="text" id="custStore" class="form-input" placeholder="店名或店號">
-        <a href="https://emap.pcsc.com.tw/" target="_blank" style="font-size:0.65rem; color:var(--accent); align-self:center; text-decoration:none; white-space:nowrap; border:1px solid var(--accent); padding: 5px 8px;">查詢門市</a>
+        <a href="https://emap.pcsc.com.tw/" target="_blank" style="font-size:0.6rem; color:var(--accent); text-decoration:none; align-self:center; border:1px solid var(--accent); padding:4px;">查詢</a>
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">匯款帳號末五碼</label>
-      <input type="text" id="custBank" class="form-input" placeholder="匯款後填寫">
-    </div>
-    
-    <div id="orderSummary" style="background:#f0f0f0; padding:1.5rem; margin:1.5rem 0; font-size:0.85rem;">
-        <!-- 自動帶入訂單摘要 -->
-    </div>
-    
+    <div class="form-group"><label class="form-label">匯款帳號末五碼</label><input type="text" id="custBank" class="form-input"></div>
+    <div id="orderSummary" style="background:#f4f4f4; padding:1rem; margin-bottom:1.5rem; font-size:0.8rem; line-height:1.6;"></div>
     <button class="primary-btn" onclick="sendToGoogle()">Confirm & Send ❯</button>
   </div>
 </div>
 
-<div id="toast">Added to bag</div>
-
 <script>
-  // 1. 商品資料區
-  const PRODUCTS = [
-    { id: 1, name: "Mardi Mercredi 經典大學T", price: 1850, img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800" },
-    { id: 2, name: "Le Labo 日本限定香氛 15ml", price: 3200, img: "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?q=80&w=800" },
-    { id: 3, name: "PAWS 刺繡工裝長褲", price: 2180, img: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=800" },
-    { id: 4, name: "Tamburins 貝殼護手霜", price: 920, img: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=800" },
-    { id: 5, name: "日系極簡皮革側背包", price: 1580, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=800" },
-    { id: 6, name: "韓國設計師款棒球帽", price: 1100, img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=800" }
-  ];
+  // 已嵌入你的試算表 ID
+  const SPREADSHEET_ID = "1w0TnBgPXoN7geL4XjPpAW5D2Flok6kwXxfUzr72gSBc";
+  const TAB_NAME = "工作表1"; 
+  const DATA_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${TAB_NAME}`;
 
+  let PRODUCTS = [];
   let cart = [];
 
-  function renderProducts() {
-    const grid = document.getElementById('productGrid');
-    grid.innerHTML = PRODUCTS.map(p => `
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <img src="${p.img}" alt="${p.name}" class="product-img">
-          <button class="add-to-cart" onclick="addToCart(${p.id})">ADD TO BAG</button>
-        </div>
-        <div class="product-info">
-          <h3 class="product-name">${p.name}</h3>
-          <p class="product-price">NT$ ${p.price.toLocaleString()}</p>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function addToCart(id) {
-    const product = PRODUCTS.find(p => p.id === id);
-    const existing = cart.find(item => item.id === id);
-    if (existing) existing.qty += 1;
-    else cart.push({ ...product, qty: 1 });
-    updateCartUI();
-    showToast(`Added to Bag`);
-  }
-
-  function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
-    updateCartUI();
-  }
-
-  function updateCartUI() {
-    const count = cart.reduce((sum, item) => sum + item.qty, 0);
-    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    document.getElementById('cartCount').innerText = count;
-    document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
-    
-    const cartItemsEl = document.getElementById('cartItems');
-    if (cart.length === 0) {
-      cartItemsEl.innerHTML = '<p style="text-align:center; color:var(--muted); margin-top:3rem; font-size:0.8rem;">Your bag is currently empty.</p>';
-    } else {
-      cartItemsEl.innerHTML = cart.map(item => `
-        <div class="cart-item">
-          <img src="${item.img}" class="cart-item-img">
-          <div class="cart-item-info">
-            <p style="font-size:0.85rem; font-weight:400;">${item.name}</p>
-            <p style="font-size:0.75rem; color:var(--accent);">NT$ ${item.price.toLocaleString()} x ${item.qty}</p>
-          </div>
-          <button onclick="removeFromCart(${item.id})" style="background:none; border:none; cursor:pointer; color:#ccc;">✕</button>
-        </div>
-      `).join('');
+  // 從 Google Sheets 抓取商品
+  async function fetchProducts() {
+    try {
+      const response = await fetch(DATA_URL);
+      if (!response.ok) throw new Error();
+      const data = await response.text();
+      const rows = data.split('\n').slice(1);
+      PRODUCTS = rows.map(row => {
+        const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
+        return { id: cols[0], name: cols[1], price: parseInt(cols[2]), img: cols[3] };
+      }).filter(p => p.name && !isNaN(p.price));
+      renderUI();
+    } catch (e) { 
+      document.getElementById('productGrid').innerHTML = "<p style='text-align:center; grid-column:1/-1;'>尚未讀取到商品，請確認試算表已「發佈到網路」。</p>"; 
     }
   }
 
-  function toggleCart() {
-    document.getElementById('cartDrawer').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('open');
+  function renderUI() {
+    if (PRODUCTS.length === 0) return;
+    document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <img src="${p.img}" class="product-img" onerror="this.src='https://placehold.co/400x400?text=No+Image'">
+          <button class="add-to-cart" onclick="addToCart('${p.id}')">ADD TO BAG</button>
+        </div>
+        <div class="product-info">
+          <p style="font-size:0.9rem; margin-bottom:0.5rem;">${p.name}</p>
+          <p class="product-price">NT$ ${p.price.toLocaleString()}</p>
+        </div>
+      </div>`).join('');
   }
 
+  function addToCart(id) {
+    const p = PRODUCTS.find(x => x.id == id);
+    const item = cart.find(i => i.id == id);
+    if (item) item.qty++; else cart.push({...p, qty:1});
+    updateCart();
+    alert(`已加入購物車：${p.name}`);
+  }
+
+  function updateCart() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartCount').innerText = count;
+    document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
+    document.getElementById('cartItems').innerHTML = cart.map(i => `
+      <div style="display:flex; gap:15px; margin-bottom:15px; align-items:center;">
+        <img src="${i.img}" style="width:60px;height:60px;object-fit:cover;border-radius:2px;">
+        <div style="flex:1;">
+          <p style="font-size:0.85rem;font-weight:400;">${i.name}</p>
+          <p style="font-size:0.75rem;color:var(--accent);">NT$ ${i.price.toLocaleString()} x ${i.qty}</p>
+        </div>
+        <button onclick="removeFromCart('${i.id}')" style="background:none;border:none;color:#ccc;cursor:pointer;">✕</button>
+      </div>`).join('');
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(i => i.id != id);
+    updateCart();
+  }
+
+  function toggleCart() { document.getElementById('cartDrawer').classList.toggle('open'); document.getElementById('overlay').classList.toggle('open'); }
+  
   function openCheckout() {
-    if (cart.length === 0) return alert('袋子裡還沒有商品喔！');
-    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const itemsList = cart.map(item => `${item.name}(${item.qty})`).join(', ');
-    
-    document.getElementById('orderSummary').innerHTML = `
-        <strong>訂單摘要：</strong><br>${itemsList}<br>
-        <strong>應付總額：NT$ ${total.toLocaleString()}</strong>
-    `;
-    
+    if (cart.length === 0) return alert('購物車內目前沒有商品喔！');
+    const itemsText = cart.map(i => `${i.name} x ${i.qty}`).join('<br>');
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('orderSummary').innerHTML = `<strong>訂單明細：</strong><br>${itemsText}<br><br><strong>應付總額：NT$ ${total.toLocaleString()}</strong>`;
     toggleCart();
     document.getElementById('checkoutModal').classList.add('open');
     document.getElementById('checkoutOverlay').classList.add('open');
   }
 
-  function closeCheckout() {
-    document.getElementById('checkoutModal').classList.remove('open');
-    document.getElementById('checkoutOverlay').classList.remove('open');
-  }
+  function closeCheckout() { document.getElementById('checkoutModal').classList.remove('open'); document.getElementById('checkoutOverlay').classList.remove('open'); }
 
-  // 2. Google 表單串接區
+  // ⚠️ 請在此替換你的 Google 表單資訊
   function sendToGoogle() {
     const name = document.getElementById('custName').value;
     const phone = document.getElementById('custPhone').value;
-    const email = document.getElementById('custEmail').value;
     const store = document.getElementById('custStore').value;
     const bank = document.getElementById('custBank').value;
+    if(!name || !phone || !store || !bank) return alert('請完整填寫收件資訊與匯款末五碼');
 
-    if (!name || !phone || !store || !bank) return alert('請填寫完整收件資訊與匯款末五碼');
-
-    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const itemsList = cart.map(item => `${item.name}x${item.qty}`).join(', ');
-
-    // 🔗 請替換為你的 Google 表單 ID 與欄位編號 (entry.xxxx)
-    const formID = "你的Google表單ID"; 
+    const formID = "你的Google表單ID_在此替換"; 
     const googleURL = `https://docs.google.com/forms/d/e/${formID}/formResponse?`;
     
     const params = new URLSearchParams({
-        "entry.1111111": name,      // 姓名
-        "entry.2222222": phone,     // 電話
-        "entry.3333333": email,     // 信箱
-        "entry.4444444": store,     // 門市
-        "entry.5555555": bank,      // 末五碼
-        "entry.6666666": itemsList, // 訂單清單
-        "entry.7777777": total,     // 總金額
+        "entry.111111": name, // 替換為你的姓名欄位 ID
+        "entry.222222": phone, // 替換為你的電話欄位 ID
+        "entry.333333": document.getElementById('custEmail').value,
+        "entry.444444": store,
+        "entry.555555": bank,
+        "entry.666666": cart.map(i => `${i.name}x${i.qty}`).join(', '),
+        "entry.777777": cart.reduce((s, i) => s + i.price * i.qty, 0),
         "submit": "Submit"
     });
 
-    fetch(googleURL + params.toString(), { mode: 'no-cors' })
-        .then(() => {
-            alert('PAWS 已收到您的訂單！\n我們將核對匯款資訊後安排採買。');
-            cart = [];
-            updateCartUI();
-            closeCheckout();
-        })
-        .catch(() => alert('提交失敗，請檢查網路或聯繫客服'));
+    fetch(googleURL + params.toString(), { mode: 'no-cors' }).then(() => {
+        alert('PAWS 訂單已成功送出！我們會盡快核對款項，謝謝。');
+        cart = []; updateCart(); closeCheckout();
+    }).catch(() => alert('送出失敗，請聯繫客服或稍後再試。'));
   }
 
-  function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.innerText = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  renderProducts();
+  window.onload = fetchProducts;
 </script>
-
 </body>
 </html>
